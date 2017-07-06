@@ -1,5 +1,3 @@
-console.log('start here');
-
 var locations = [
 	  {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}, id: 0},
 	  {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}, id: 1},
@@ -10,30 +8,30 @@ var locations = [
 	];
 
 var map;
-
-// Create a new blank array for all the listing markers.
-var markers = [];
-
-var array = new Array(markers.length);
-array.fill(0);
-
-
-var largeInfowindow;
-
-function initMap() {
-	// Constructor creates a new map - only center and zoom are required.
-console.log('initMap func');
-	map = new google.maps.Map(document.getElementById('map'), {
+var myOption = {
 	  center: {lat: 40.7413549, lng: -73.9980244},
 	  zoom: 13,
 	  mapTypeControl: false
-	});
+	};
+var markers = [];
+var largeInfowindow;
 
-	largeInfowindow = new google.maps.InfoWindow();	
+var googleRequestTimeout = setTimeout(function(){
+		var el = document.createElement('p');
+		el.innerHTML = 'Failed to get Google Map resources...';
+		document.getElementById('map').append(el);		
+	}, 5000);
 
-	// The following group uses the location array to create an array of markers on initialize.
+function initMap() {
+console.log('A');
+	// Constructor creates a new map - only center and zoom are required.
+	map = new google.maps.Map(document.getElementById('map'), myOption);
+console.log('B');
+	// Initiate infoWindow.
+	largeInfowindow = new google.maps.InfoWindow();
+console.log('C');
+	// Create an array of markers based on the locations data.
 	for (var i = 0; i < locations.length; i++) {
-	    // Get the position from the location array.
 	    var position = locations[i].location;
 	    var title = locations[i].title;
 	    var id = locations[i].id;
@@ -52,16 +50,22 @@ console.log('initMap func');
 		});
 		
 	}
-
-
+console.log('D');
+// Build the VM. Seems the VM has to be nested in the initMap func to use google js.
 function LocationsViewModel() {
-console.log('VM func');
+
     var self = this;
 
+	// Bind to the input.
 	self.search = ko.observable();
 
+    // Load all markers in an observable array.
     self.locs = ko.observableArray(markers);
 
+    // Filter the markers.
+    // This part is doing two things: 
+	// 1. filter the markers and bind the result to show in the side list.
+	// 2. show filtered markers and hide the others on the map.
     self.displocs = ko.computed(function(){
 		return self.locs().filter(function(loc){
 			if(!self.search() || loc.title.toLowerCase().indexOf(self.search().toLowerCase()) != -1) {
@@ -75,90 +79,90 @@ console.log('VM func');
 		});
 	}, this);
 
-
+/* 
+// I used this to test the computed observable
 var btn = document.getElementById('btn');
 btn.addEventListener('click', function(){
-	console.log(self.displocs());
-	console.log(holder);
+	console.log(self.displocs());	
 });
+*/
 
-	/* updateListings(self.displocs()); */
-
+	// Click function for the side bar.
 	self.popInfo = function() {
 		var marker = markers[this.id];
-		populateInfoWindow(marker, largeInfowindow);		
+		populateInfoWindow(marker, largeInfowindow);
 	};
-
-
 }
-
+console.log('E');
 ko.applyBindings(new LocationsViewModel());
-
-
-
-
-
-	/* showListings();	 */
-/* markers[0].setMap(map); */
-  }
-
-
-/* function LocationsViewModel() {
-console.log('VM func');
-    var self = this;
-
-	self.search = ko.observable();
-
-    self.locs = ko.observableArray(locations);
-
-    self.displocs = ko.computed(function(){
-		return self.locs().filter(function(loc){
-			if(!self.search() || loc.title.toLowerCase().indexOf(self.search().toLowerCase()) != -1) 
-				return loc;
-		});
-	}, this);
-
-	
-
-console.log(self.displocs());
-var btn = document.getElementById('btn');
-btn.addEventListener('click', function(){
-	console.log(self.displocs());
-});
-
-	updateListings(self.displocs());
-
-	self.popInfo = function() {
-		var marker = markers[this.id];
-		populateInfoWindow(marker, largeInfowindow);		
-	};
-
+console.log('F');
+clearTimeout(googleRequestTimeout);
 
 }
-
-ko.applyBindings(new LocationsViewModel()); */
-/* ko.applyBindings(new initMap()); */
-
 
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
-console.log('pop func');
-	ginforwindow = infowindow;
+	var infoContent;
+	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+	url += '?' + $.param({
+		'api-key': "3b237762e7c04b87889c9de7e953f24c",
+		'q': marker.title
+		});
+console.log('I am here');
+	$.getJSON( url, function( data ) {
+console.log('getJSON');
+		$('#nytimes-header').text('New York Times Articles About ' + marker.title);
+		$.each( data['response']['docs'], function( key, val ) {
+		headline = val['headline']['main'];
+		url = val['web_url'];
+		
+		item = "<li class='article'>";
+		item += "<a href=" + url + ">" + headline + "</a>";
+		item += "</li>";
+		$('#nytimes-articles').append(item);
+		});
+			
+	}).error(function() {
+		$('#nytimes-header').text('New York Times Articles Could Not Be Loaded');
+});
+console.log(infoContent);
 	// Check to make sure the infowindow is not already opened on this marker.
 	if (infowindow.marker != marker) {
-	    infowindow.marker = null;
+	    if (infowindow.marker) { infowindow.marker.setAnimation(null); }
+	    /* markers[infowindow.marker.id].setAnimation(null); */
+	    marker.setAnimation(google.maps.Animation.BOUNCE);
 	    infowindow.marker = marker;
-	    infowindow.setContent('<div>' + marker.position + '</div>');
+	    infowindow.setContent('<div><h4 id="nytimes-header"></h4><ul id="nytimes-articles" class="article-list"></ul></div>');
 	    infowindow.open(map, marker);
 	    // Make sure the marker property is cleared if the infowindow is closed.
 	    infowindow.addListener('closeclick', function() {
 			infowindow.marker = null;
 	    });
+	} else {
+		toggleBounce(marker);
 	}
 }
+
+function toggleBounce(marker) {
+	console.log('I am called');
+	if (marker.getAnimation() !== null) {
+	  marker.setAnimation(null);
+	} else {
+	  marker.setAnimation(google.maps.Animation.BOUNCE);
+	}
+}
+
+
+function menuIcon(x) {
+    x.classList.toggle("change");
+    $('.options-box').toggle("change");
+}
+
+
+//////////function bone yard.
 
 // This function will loop through the markers array and display them all.
 function showListings(arr) {

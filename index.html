@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
+    <meta charset = "UTF-8">
+    <title>Neighborhood Map</title>
     <link rel="stylesheet" href="css/style.css">
-  </head>
-  <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
     <div class="container">
-	  
-      <div class="options-box">
-        <div>
-		<label for="search">Search:</label>
-		<input id="search" type="text" data-bind="textInput: search"/>
-	    </div>
-		<ul data-bind='foreach: displocs'>
-			<li data-bind='text: title, click: $parent.popInfo'></li>
-		</ul>
+		<div class="opt-box-container" onclick="menuIcon(this)">
+			<div class="bar1"></div>
+			<div class="bar2"></div>
+			<div class="bar3"></div>
+		</div>
+        <div class="options-box">
+			<div>
+			</br>
+			<label for="search">Search:</label>
+			<input id="search" type="text" data-bind="textInput: search"/>
+			</div>
+			<ul data-bind='foreach: displocs'>
+				<li data-bind='text: title, click: $parent.popInfo'></li>
+			</ul>
 <button id='btn'>Button</button>
-      </div>
-      <div id="map"></div>
+		</div>
+        <div id="map"></div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type='text/javascript' src='js/knockout-3.4.2.js'></script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv-jmZpVAU3Yb04BKOY0rOQKd-sLkd_Ts&v=3&callback=initMap">
-    </script>
-	<script src="js/script.js"></script>
-  </body>
+    
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type='text/javascript' src='js/knockout-3.4.2.js'></script>
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv-jmZpVAU3Yb04BKOY0rOQKd-sLkd_Ts&v=3&callback=initMap">
+</script>
+<script src="js/script.js"></script>
+
 </html>

@@ -161,6 +161,16 @@ function menuIcon(x) {
     $('.options-box').toggle("change");
 }
 
+/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+function myFunction() {
+    var x = document.getElementById("options-box");
+    if (x.className === "options-box") {
+        x.className += " responsive";
+    } else {
+        x.className = "options-box";
+    }
+}
+
 
 //////////function bone yard.
 

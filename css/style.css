@@ -1,3 +1,6 @@
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,300");
+
 * {box-sizing:border-box;}
 
 p {margin: 150px;}
@@ -15,6 +18,10 @@ body {
 	position: relative;
 }
 
+.container .icon {
+	display: none;
+}
+
 input {
 	font-size: 12px;
 }
@@ -23,10 +30,10 @@ input {
 #map {
 	bottom:0px;
 	height: 100%;
-	left: 342px;
+	left: 302px;
 	position: absolute;
 	right: 0px;
-	
+	z-index: -1;
 }
 
 .options-box {
@@ -37,105 +44,60 @@ input {
 	line-height: 35px;
 	padding: 10px 10px 30px 10px;
 	text-align: left;
-	width: 340px;
+	width: 300px;
+	display: block;
 }
 
-.change .options-box {
-	display: none;
-}
 
-.opt-box-container {
-    display: none;
-}
 
-.bar1, .bar2, .bar3 {
-    width: 35px;
-    height: 5px;
-    background-color: #333;
-    margin: 6px 0;
-    transition: 0.4s;
-}
-
-.change .bar1 {
-    -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
-    transform: rotate(-45deg) translate(-9px, 6px) ;
-}
-
-.change .bar2 {opacity: 0;}
-
-.change .bar3 {
-    -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
-    transform: rotate(45deg) translate(-8px, -8px) ;
-}
-
-@media screen and (min-width: 376px) and (max-width: 769px) {
-    .sec-icon {
-    width: 100%;
-    height: 130px;
-    min-width: 125px;
-	}
-
-	.bottom {
-    width: 50%;
-    min-width: 144px;
-    float: left;
-    display: inline-block;
-    text-align: center;
-    position: relative;
-    overflow-wrap: break-word;
-    padding-bottom: 20px;
-	}
-
-	.opt-box-container {
+@media screen and (max-width: 768px) {
+    .container .icon {
 		display: inline-block;
-	z-index: 100;
-	position: absolute;
+		margin: 8px;
+		text-decoration: none;
 	}
 
+	.container .icon:before {
+		font-family: FontAwesome;
+		font-size: 24px;
+		content: "\f0c9";
+		text-align: center;
+		background-color: darkgrey;
+		padding: 3px 6px;
+		color: white;
+		border-radius: 4px;
+	}
+	
 	.options-box {
 		display: none;
 	}
+	
 
 	#map {
 		left: 0;
 	}
 }
 
+@media screen and (max-width: 768px) {
+	.options-box.responsive {
+		display: block;
+		position: relative;
+	}
+}
 
 @media screen and (max-width: 375px) {
-    .sec-icon {
-    width: 55%;
-    height: 130px;
-    min-width: 125px;
-	}
-
-	.bottom {
-    width: 100%;
-    float: left;
-    display: block;
-    text-align: center;
-    position: relative;
-    overflow-wrap: break-word;
-    padding-bottom: 20px;
-	}
-
-	h3 {
-    font-size: 16px;
-	}
-
-		
-	.opt-box-container {
-		display: inline-block;
-	z-index: 100;
-	position: absolute;
-	}
-
 	.options-box {
-		display: none;
+		width: 100%;
 	}
 
-	#map {
-		left: 0;
-	}
 }
 
+
+/* var locations = [
+	  {title: 'Harry Buffalo', location: {lat: 28.541346, lng: -81.381661}, id: 0},
+	  {title: 'Omega Deli Restaurant', location: {lat: 28.546058, lng: -81.373764}, id: 1},
+	  {title: 'Shari Sushi Lounge', location: {lat: 28.542288, lng: -81.369215}, id: 2},
+	  {title: 'LE GOURMET BREAK', location: {lat: 28.540667, lng: -81.377412}, id: 3},
+	  {title: "Panino's Pizza & Grill", location: {lat: 28.541595, lng: -81.378847}, id: 4},
+	  {title: "Leo's Diner", location: {lat: 28.546354, lng: -81.378952}, id: 5}
+	]; */

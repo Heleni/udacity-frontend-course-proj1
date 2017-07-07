@@ -1,61 +1,16 @@
 ### Version 1.0
 # Overview
-This package is an optional practice to the ["Full Stack Web Developer" nanodegree][FSWD] at [Udacity]. The main objective of this practice is to become familiarized with SQLAlchemy libary. There are three Python code files writen in Python 2.7.13. 
-- The 'database_setup.py' creates and configurates a database 'puppyshelter.db' using SQLAlchemy library; 
-- The 'puppypopulator.py' was created by [Udacity] instructing team. It poplulates the database.
-- The 'puppy_query.py' uses SQLAlchemy library to:
-1. Query all of the puppies and return the results in ascending alphabetical order
-Example:
-```
-*****           All the puppies           *****
-Abby        Angel       Annie       Bailey
-Bailey      Bandit      Baxter      Bear
-Beau        Bella       Belle       Bentley
-```
-2. Query all of the puppies that are less than 6 months old organized by the youngest first
-Example:
-```
-*****All the puppy toddlers younger than 6 months*****
-Romeo       2017-06-07
-Penny       2017-06-04
-Riley       2017-05-29
-```
-3. Query all puppies by ascending weight
-Example:
-```
-*****From skiny to chubby*****
-##### There is a warning line I do not know how to remove. Yet the code does its work alright.#####
-/usr/local/lib/python2.7/dist-packages/sqlalchemy/sql/sqltypes.py:596: SAWarning: Dialect sqlite+pysqlite does *not* support Decimal objects natively, and SQLAlchemy must convert from floating point - rounding errors and other issues may occur. Please consider storing Decimal numbers as strings or integers on this platform for lossless storage.
-  'storage.' % (dialect.name, dialect.driver)) 
-Zoe         1.4 lbs
-Sophie      1.6 lbs
-Sandy       2.5 lbs
-```
-4. Query all puppies grouped by the shelter in which they are staying
-Example:
-```
-1 Oakland Animal Services 16
-2 San Francisco SPCA Mission Adoption Center 20
-3 Wonder Dog Rescue 19
-```
-5. Query all puppies, organize them according to their shelter.
-Example:
-```
-Oakland Animal Services   Charlie
-Oakland Animal Services   Buddy
-...
-San Francisco SPCA Mission Adoption Center Harley
-```
+This package is a required project of the ["Full Stack Web Developer" nanodegree][FSWD] at [Udacity]. The main objectives of this practice include building a responsive web application, 'Neighbourhood Maps', using jQuery, Ajax and third-party API's, implementing 'Model-View-ViewModel' via Knockout library, applying skillsets such as html, css, javascript, etc. The project is completely front-ended and can be run by opening the 'index.html' file in a browser. 
+
+# Functions
+The 'Neighbourhood Maps' will:
+1. Display 3 main components: a Search bar, a List view, and a Map
+2. The Search filters BOTH List view and Map markers by name
+3. BOTH List view and Map markers are clickable. Clicking either will open an info window displaying the recent New York Times articles about that place.
+4. Drag the person icon to a location will display the street view.
 
 # How to use
-The program is developed in a virtual machine of Ubuntu 16.04.2 environment. It has not been tested in other systems.
-To use the program, you need to:
- - set up a command line terminal to run Python
- - install sqlalchemy 
- - run the database_setup.py in the command line
- - run puppypopulator.py in the command line
- - run puppy_query.py in the command line 
- *If the only some of the queries are needed, comment out the undesired functions
+Simply download the package and open the 'index.html' file in a browser.
 
 # License
 MIT
@@ -63,3 +18,7 @@ MIT
 ***********************
   [FSWD]: <https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004>
   [Udacity]: <https://www.udacity.com>
+  [git]: <https://www.virtualbox.org/wiki/Downloads>
+  [vb]: <https://www.virtualbox.org/wiki/Downloads>
+  [vag]: <https://www.vagrantup.com/downloads>
+  

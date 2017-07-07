@@ -5,11 +5,13 @@
     <title>Neighborhood Map</title>
     <link rel="stylesheet" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 <body>
     <div class="container">
+		<!-- Hamburger icon -->
+		<div class='overlap'>
 		<a href="javascript:void(0);" class="icon" onclick="myFunction()"></a>
+		</div>
         <div class="options-box" id='options-box'>
 			<div>
 			<label for="search">Search:</label>
@@ -18,11 +20,9 @@
 			<ul data-bind='foreach: displocs'>
 				<li data-bind='text: title, click: $parent.popInfo'></li>
 			</ul>
-<button id='btn'>Button</button>
 		</div>
         <div id="map"></div>
     </div>
-    
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -31,5 +31,4 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv-jmZpVAU3Yb04BKOY0rOQKd-sLkd_Ts&v=3&callback=initMap">
 </script>
 <script src="js/script.js"></script>
-
 </html>

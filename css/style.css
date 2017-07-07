@@ -1,8 +1,11 @@
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+* {
+	box-sizing: border-box;
+}
 
-* {box-sizing:border-box;}
-
-p {margin: 150px;}
+p {
+	margin: 150px;
+}
 
 html,
 body {
@@ -28,8 +31,8 @@ li {
 	margin: 3px;
 }
 
-li:hover { 
-    background-color: #FF9;
+li:hover {
+	background-color: #FF9;
 }
 
 .container {
@@ -42,8 +45,8 @@ li:hover {
 }
 
 div.infowindow {
-    max-height:250px;
-    overflow-y:auto;
+	max-height: 250px;
+	overflow-y: auto;
 	margin: 0;
 }
 
@@ -51,9 +54,8 @@ input {
 	font-size: 12px;
 }
 
-
 #map {
-	bottom:0px;
+	bottom: 0px;
 	height: 100%;
 	left: 302px;
 	position: absolute;
@@ -72,15 +74,12 @@ input {
 	display: block;
 }
 
-
-
 @media screen and (max-width: 768px) {
-    .container .icon {
+	.container .icon {
 		display: inline-block;
 		margin: 8px;
 		text-decoration: none;
 	}
-
 	.container .icon:before {
 		font-family: FontAwesome;
 		font-size: 24px;
@@ -91,17 +90,13 @@ input {
 		color: white;
 		border-radius: 4px;
 	}
-	
 	.overlap {
 		position: relative;
 		z-index: 3;
 	}
-	
 	.options-box {
 		display: none;
 	}
-	
-
 	#map {
 		position: absolute;
 		left: 0;

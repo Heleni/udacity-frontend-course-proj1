@@ -81,6 +81,11 @@ function initMap() {
 		maxWidth: 200
 	});
 
+	// clickFunction on the marker.
+	var clickFunction = function() {
+		populateInfoWindow(this, largeInfowindow);
+	};
+	
 	// Create an array of markers based on the locations data.
 	for (var i = 0; i < locations.length; i++) {
 		var position = locations[i].location;
@@ -95,10 +100,13 @@ function initMap() {
 		});
 		// Push the marker to our array of markers.
 		markers.push(marker);
-		// Create an onclick event to open an infowindow at each marker.
-		marker.addListener('click', function() {
+		// JSHint warning about 'Functions declared within loops referencing
+		// an outer scoped variable may lead to confusing semantics.'.
+		/* marker.addListener('click', function() {
 			populateInfoWindow(this, largeInfowindow);
-		});
+		}); */
+		// Create an onclick event to open an infowindow at each marker.
+		marker.addListener('click', clickFunction);
 
 	}
 
@@ -176,8 +184,8 @@ function populateInfoWindow(marker, infowindow) {
 		// You are selected! Let's BOUNCE!
 		marker.setAnimation(google.maps.Animation.BOUNCE);
 		infowindow.marker = marker;
-		var temp = '<div class="infowindow"><h4 id="nytimes-header"></h4>'
-		temp += '<ul id="nytimes-articles" class="article-list"></ul></div>'
+		var temp = '<div class="infowindow"><h4 id="nytimes-header"></h4>';
+		temp += '<ul id="nytimes-articles" class="article-list"></ul></div>';
 		infowindow.setContent(temp);
 		infowindow.open(map, marker);
 		// Clear marker when the infowindow is closed.
@@ -193,9 +201,9 @@ function populateInfoWindow(marker, infowindow) {
 	$.getJSON(url, function(data) {
 		$('#nytimes-header').text(
 			'New York Times Articles About ' + marker.title);
-		$.each(data['response']['docs'], function(key, val) {
-			headline = val['headline']['main'];
-			url = val['web_url'];
+		$.each(data.response.docs, function(key, val) {
+			headline = val.headline.main;
+			url = val.web_url;
 
 			item = "<li class='article'>";
 			item += "<a href=" + url + ">" + headline + "</a>";

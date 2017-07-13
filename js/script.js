@@ -31,10 +31,10 @@ var locations = [{
 		id: 3
 	},
 	{
-		title: "Panino's Pizza & Grill",
+		title: "Chef Eddies Restaurant",
 		location: {
-			lat: 28.541595,
-			lng: -81.378847
+			lat: 28.540324,
+			lng: -81.387115
 		},
 		id: 4
 	},
@@ -79,44 +79,44 @@ function initMap() {
 	function LocationsViewModel() {
 
 		// Constructor creates a new map - only center and zoom are required.
-	map = new google.maps.Map(document.getElementById('map'), myOption);
+		map = new google.maps.Map(document.getElementById('map'), myOption);
 
-	// Initiate infoWindow.
-	largeInfowindow = new google.maps.InfoWindow({
-		maxWidth: 200
-	});
-
-	// clickFunction on the marker.
-	var clickFunction = function() {
-		populateInfoWindow(this, largeInfowindow);
-	};
-	
-	// Create an array of markers based on the locations data.
-	for (var i = 0; i < locations.length; i++) {
-		var position = locations[i].location;
-		var title = locations[i].title;
-		var id = locations[i].id;
-		// Create a marker per location, and put into markers array.
-		var marker = new google.maps.Marker({
-			position: position,
-			title: title,
-			animation: google.maps.Animation.DROP,
-			id: id
+		// Initiate infoWindow.
+		largeInfowindow = new google.maps.InfoWindow({
+			maxWidth: 200
 		});
-		// Push the marker to our array of markers.
-		markers.push(marker);
-		// JSHint warning about 'Functions declared within loops referencing
-		// an outer scoped variable may lead to confusing semantics.'.
-		/* marker.addListener('click', function() {
+
+		// clickFunction on the marker.
+		var clickFunction = function() {
 			populateInfoWindow(this, largeInfowindow);
-		}); */
-		// Create an onclick event to open an infowindow at each marker.
-		marker.addListener('click', clickFunction);
+		};
 
-	}
+		// Create an array of markers based on the locations data.
+		for (var i = 0; i < locations.length; i++) {
+			var position = locations[i].location;
+			var title = locations[i].title;
+			var id = locations[i].id;
+			// Create a marker per location, and put into markers array.
+			var marker = new google.maps.Marker({
+				position: position,
+				title: title,
+				animation: google.maps.Animation.DROP,
+				id: id
+			});
+			// Push the marker to our array of markers.
+			markers.push(marker);
+			// JSHint warning about 'Functions declared within loops referencing
+			// an outer scoped variable may lead to confusing semantics.'.
+			/* marker.addListener('click', function() {
+				populateInfoWindow(this, largeInfowindow);
+			}); */
+			// Create an onclick event to open an infowindow at each marker.
+			marker.addListener('click', clickFunction);
 
-	
-	
+		}
+
+
+
 		var self = this;
 
 		// Bind to the input.
@@ -156,94 +156,70 @@ function initMap() {
 			var marker = markers[this.id];
 			populateInfoWindow(marker, largeInfowindow);
 		};
-	
-	function populateInfoWindow(marker, infowindow) {
-	var infoContent;
-	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	url += '?' + $.param({
-		'api-key': "3b237762e7c04b87889c9de7e953f24c",
-		'q': marker.title
-	});
 
-	// Check to make sure the infowindow is not already opened on this marker.
-	if (infowindow.marker != marker) {
-		if (infowindow.marker) {
-			infowindow.marker.setAnimation(null);
+
+
+		/**
+		 * @description Populates the infowindow and set marker animation
+		 * @param {object} marker
+		 * @param {object} infowindow
+		 */
+		function populateInfoWindow(marker, infowindow) {
+			var url =
+				"https://api.nytimes.com/svc/search/v2/articlesearch.json";
+			url += '?' + $.param({
+				'api-key': "3b237762e7c04b87889c9de7e953f24c",
+				'q': marker.title
+			});
+
+			// Check to make sure the infowindow is not already opened on this marker.
+			if (infowindow.marker != marker) {
+				if (infowindow.marker) {
+					infowindow.marker.setAnimation(null);
+				}
+				// You are selected! Let's BOUNCE!
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+			} else {
+				toggleBounce(marker);
+			}
+
+			// Fetch NYT articles to put in infoWindow & error handling.
+			$.getJSON(url, function(data) {
+				infowindow.marker = marker;
+				var temp = '<div class="infowindow"><h4 id="nytimes-header">';
+				temp += 'New York Times Articles About ';
+				temp += marker.title;
+				temp += '</h4>';
+				temp += '<ul id="nytimes-articles" class="article-list">';
+
+				$.each(data.response.docs, function(key, val) {
+					var headline = val.headline.main;
+					url = val.web_url;
+
+					var item = "<li class='article'>";
+					item += "<a href=" + url + ">" + headline + "</a>";
+					item += "</li>";
+					temp += item;
+				});
+
+				temp += '</ul></div>';
+
+				infowindow.setContent(temp);
+				infowindow.open(map, marker);
+				// Clear marker when the infowindow is closed.
+				infowindow.addListener('closeclick', function() {
+					if (infowindow.marker) {
+						infowindow.marker.setAnimation(null);
+						infowindow.marker = null;
+					}
+				});
+			}).fail(function() {
+				$('#nytimes-header').text(
+					'New York Times Articles Could Not Be Loaded');
+			});
+
 		}
-		// You are selected! Let's BOUNCE!
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		
-		/* 
-		infowindow.marker = marker;
-		var temp = '<div class="infowindow"><h4 id="nytimes-header"></h4>';
-		temp += '<ul id="nytimes-articles" class="article-list"></ul></div>';
-		infowindow.setContent(temp);
-		infowindow.open(map, marker);
-		// Clear marker when the infowindow is closed.
-		infowindow.addListener('closeclick', function() {
-			infowindow.marker.setAnimation(null);
-			infowindow.marker = null;
-		});
-		 */
-		
-	} else {
-		toggleBounce(marker);
-	}
 
-	// Fetch NYT articles to put in infoWindow & error handling.
-	$.getJSON(url, function(data) {
-		infowindow.marker = marker;
-		var temp = '<div class="infowindow"><h4 id="nytimes-header">';
-		temp += 'New York Times Articles About ';
-		temp += marker.title;
-		temp += '</h4>';
-		temp += '<ul id="nytimes-articles" class="article-list">';
-		
-		$.each(data.response.docs, function(key, val) {
-			headline = val.headline.main;
-			url = val.web_url;
-
-			item = "<li class='article'>";
-			item += "<a href=" + url + ">" + headline + "</a>";
-			item += "</li>";
-			temp += item;
-		});
-		
-		temp += '</ul></div>';
-		infowindow.setContent(temp);
-		infowindow.open(map, marker);
-		console.log(marker);
-		console.log(infowindow.marker);
-		// Clear marker when the infowindow is closed.
-		infowindow.addListener('closeclick', function() {
-			console.log(infowindow.marker);
-			infowindow.marker.setAnimation(null);
-			infowindow.marker = null;
-		});
-		
-		
-		/* 
-		$('#nytimes-header').text(
-			'New York Times Articles About ' + marker.title);
-		$.each(data.response.docs, function(key, val) {
-			headline = val.headline.main;
-			url = val.web_url;
-
-			item = "<li class='article'>";
-			item += "<a href=" + url + ">" + headline + "</a>";
-			item += "</li>";
-			$('#nytimes-articles').append(item);
-		});
-		 */
-		
-
-	}).fail(function() {
-		$('#nytimes-header').text(
-			'New York Times Articles Could Not Be Loaded');
-	});
-
-}
-	
 	}
 
 	ko.applyBindings(new LocationsViewModel());
@@ -253,62 +229,6 @@ function initMap() {
 
 }
 
-
-/**
- * @description Populates the infowindow and set marker animation
- * @param {object} marker
- * @param {object} infowindow
- */
-/* function populateInfoWindow(marker, infowindow) {
-	var infoContent;
-	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	url += '?' + $.param({
-		'api-key': "3b237762e7c04b87889c9de7e953f24c",
-		'q': marker.title
-	});
-
-	// Check to make sure the infowindow is not already opened on this marker.
-	if (infowindow.marker != marker) {
-		if (infowindow.marker) {
-			infowindow.marker.setAnimation(null);
-		}
-		// You are selected! Let's BOUNCE!
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		infowindow.marker = marker;
-		var temp = '<div class="infowindow"><h4 id="nytimes-header"></h4>';
-		temp += '<ul id="nytimes-articles" class="article-list"></ul></div>';
-		infowindow.setContent(temp);
-		infowindow.open(map, marker);
-		// Clear marker when the infowindow is closed.
-		infowindow.addListener('closeclick', function() {
-			infowindow.marker.setAnimation(null);
-			infowindow.marker = null;
-		});
-	} else {
-		toggleBounce(marker);
-	}
-
-	// Fetch NYT articles to put in infoWindow & error handling.
-	$.getJSON(url, function(data) {
-		$('#nytimes-header').text(
-			'New York Times Articles About ' + marker.title);
-		$.each(data.response.docs, function(key, val) {
-			headline = val.headline.main;
-			url = val.web_url;
-
-			item = "<li class='article'>";
-			item += "<a href=" + url + ">" + headline + "</a>";
-			item += "</li>";
-			$('#nytimes-articles').append(item);
-		});
-
-	}).error(function() {
-		$('#nytimes-header').text(
-			'New York Times Articles Could Not Be Loaded');
-	});
-
-}
- */
 
 /**
  * @description Toggle marker animation
@@ -338,5 +258,6 @@ function toggleShowHide() {
 
 // maps loading error handling
 function googleError() {
-  $("#map").append("<p class='google-error'>Google Maps can't be loaded</p>");
+	$("#map").append(
+		"<p class='google-error'>Google Maps can't be loaded</p>");
 }

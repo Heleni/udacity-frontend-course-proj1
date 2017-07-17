@@ -50,6 +50,13 @@ div.infowindow {
 	margin: 0;
 }
 
+div.errMsg {
+	position: absolute;
+	top: 30px;
+	right: 0;
+	z-index: 4;
+}
+
 input {
 	font-size: 12px;
 }

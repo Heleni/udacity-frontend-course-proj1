@@ -1,4 +1,4 @@
-var locations = [{
+/* var locations = [{
 		title: 'Harry Buffalo',
 		location: {
 			lat: 28.541346,
@@ -46,7 +46,14 @@ var locations = [{
 		},
 		id: 5
 	}
-];
+]; */
+
+var locations = [];
+function lcs(arr) {
+	for (var i=0; i<arr.length; i++) {
+		locations.push(arr[i]);
+	}
+}
 
 var map;
 var myOption = {
@@ -59,13 +66,6 @@ var myOption = {
 };
 var markers = [];
 var largeInfowindow;
-
-// Start Google Map error handling.
-var googleRequestTimeout = setTimeout(function() {
-	var el = document.createElement('p');
-	el.innerHTML = 'Failed to get Google Map resources...';
-	document.getElementById('map').append(el);
-}, 5000);
 
 /**
  * @description Initiate the map and markers
@@ -103,6 +103,8 @@ function initMap() {
 				animation: google.maps.Animation.DROP,
 				id: id
 			});
+			// Draw marker
+			marker.setMap(map);
 			// Push the marker to our array of markers.
 			markers.push(marker);
 			// JSHint warning about 'Functions declared within loops referencing
@@ -119,6 +121,8 @@ function initMap() {
 
 		var self = this;
 
+		self.errMsg = ko.observable(false);
+		
 		// Bind to the input.
 		self.search = ko.observable();
 
@@ -134,11 +138,11 @@ function initMap() {
 				if (!self.search() || loc.title.toLowerCase()
 					.indexOf(self.search().toLowerCase()) != -1) {
 					var bounds = new google.maps.LatLngBounds();
-					loc.setMap(map);
+					loc.setVisible(true);
 					bounds.extend(loc.position);
 					return loc;
 				} else {
-					loc.setMap(null);
+					loc.setVisible(false);
 				}
 			});
 		}, this);
@@ -165,6 +169,7 @@ function initMap() {
 		 * @param {object} infowindow
 		 */
 		function populateInfoWindow(marker, infowindow) {
+			map.panTo(marker.getPosition());
 			var url =
 				"https://api.nytimes.com/svc/search/v2/articlesearch.json";
 			url += '?' + $.param({
@@ -174,7 +179,7 @@ function initMap() {
 
 			// Check to make sure the infowindow is not already opened on this marker.
 			if (infowindow.marker != marker) {
-				if (infowindow.marker) {
+				if (infowindow.marker != null) {
 					infowindow.marker.setAnimation(null);
 				}
 				// You are selected! Let's BOUNCE!
@@ -214,8 +219,11 @@ function initMap() {
 					}
 				});
 			}).fail(function() {
-				$('#nytimes-header').text(
-					'New York Times Articles Could Not Be Loaded');
+				var errorText = '<div><h4>New York Times Articles ';
+				errorText += 'Could Not Be Loaded</h4></div>';
+				infowindow.setContent(errorText);
+				infowindow.open(map, marker);
+				marker.setAnimation(null);
 			});
 
 		}
@@ -223,9 +231,6 @@ function initMap() {
 	}
 
 	ko.applyBindings(new LocationsViewModel());
-
-	// Stop error handling.
-	clearTimeout(googleRequestTimeout);
 
 }
 
@@ -258,6 +263,10 @@ function toggleShowHide() {
 
 // maps loading error handling
 function googleError() {
+	
+		console.log('man');
+		console.log(self.errMsg());
+		self.errMsg = !self.errMsg();
 	$("#map").append(
 		"<p class='google-error'>Google Maps can't be loaded</p>");
 }

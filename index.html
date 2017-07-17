@@ -12,21 +12,25 @@
 			<div class='overlap'>
 				<a href="javascript:void(0);" class="icon" onclick="toggleShowHide()"></a>
 			</div>
-			<div class="options-box" id='options-box'>
+			<aside class="options-box" id='options-box'>
 				<div>
 					<label for="search">Search:</label>
-					<input id="search" type="text" data-bind="textInput: search"/>
+					<input id="search" type="text" data-bind="textInput: search">
 				</div>
 				<ul data-bind='foreach: displocs'>
 					<li data-bind='text: title, click: $parent.popInfo'></li>
 				</ul>
+			</aside>
+			<div data-bind="visible: errMsg" class='errMsg'>
+				<p>Google Maps can't be loaded!</p>
 			</div>
-			<div id="map"></div>
+			<main id="map"></main>
 		</div>
 	</body>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type='text/javascript' src='js/knockout-3.4.2.js'></script>
+	<script src='js/knockout-3.4.2.js'></script>
+	<script src="js/script.js"></script>
+	<script src="js/data.js"></script>
 	<script async defer
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv-jmZpVAU3Yb04BKOY0rOQKd-sLkd_Ts&v=3&callback=initMap" onerror="googleError()"></script>
-	<script src="js/script.js"></script>
 </html>

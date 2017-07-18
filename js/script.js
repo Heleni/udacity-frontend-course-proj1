@@ -73,7 +73,7 @@ var largeInfowindow;
  */
 function initMap() {
 
-
+console.log('here');
 	// Build the VM. Seems the VM has to be nested in the initMap func 
 	// to use google js.
 	function LocationsViewModel() {
@@ -123,6 +123,18 @@ function initMap() {
 
 		self.errMsg = ko.observable(false);
 		
+		
+		/* 
+		// I have tried many approaches. Just can not make it work
+		// like the example given by my reviewer.
+		// https://codepen.io/NKiD/pen/PGOjRW?editors=1010
+		self.sideBar = ko.observable(true);
+		
+		self.clickMe = function() {      
+			self.sideBar(!self.sideBar());
+		};
+		*/
+		
 		// Bind to the input.
 		self.search = ko.observable();
 
@@ -162,7 +174,6 @@ function initMap() {
 		};
 
 
-
 		/**
 		 * @description Populates the infowindow and set marker animation
 		 * @param {object} marker
@@ -184,6 +195,7 @@ function initMap() {
 				}
 				// You are selected! Let's BOUNCE!
 				marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function(){ marker.setAnimation(null); }, 2100);
 			} else {
 				toggleBounce(marker);
 			}
@@ -264,9 +276,15 @@ function toggleShowHide() {
 // maps loading error handling
 function googleError() {
 	
-		console.log('man');
-		console.log(self.errMsg());
-		self.errMsg = !self.errMsg();
-	$("#map").append(
-		"<p class='google-error'>Google Maps can't be loaded</p>");
+	function LocationsViewModel() {
+
+		var self = this;
+
+		self.errMsg = ko.observable(true);
+		self.sideBar = ko.observable(true);
+		
+		self.displocs = ko.observableArray(locations);
+	}
+
+	ko.applyBindings(new LocationsViewModel());
 }
